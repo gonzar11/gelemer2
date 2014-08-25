@@ -1,8 +1,9 @@
 package com.example.android.customviews.charting;
 
-import android.content.ClipData.Item;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -14,19 +15,22 @@ import com.example.android.customviews.R;
 
 public class Rectangle extends View{
 	
-	private boolean showImage, showletter, showWord;
+	private boolean showImage, showLetter, showWord;
 	 private Paint imagePaint;
 	 private Paint textLetter;
 	 private Paint textWord;
 	 private Paint rectanglePaint;
 	 private Paint mShadowPaint;
-	 
 	 private int textColor;
+	 private float rectangleSize;
+	 
+	 private Bitmap imageBitmap; 
+	
 	
 
 	public Rectangle(Context context) {
 		super(context);
-		init();
+		init(context);
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -55,44 +59,47 @@ public class Rectangle extends View{
             // each custom attribute in the R.styleable.PieChart array.
             showImage = a.getBoolean(R.styleable.Rectangle_showImage, false);
             showWord = a.getBoolean(R.styleable.Rectangle_showWord, false);
-            showletter = a.getBoolean(R.styleable.Rectangle_showLetter, false);
+            showLetter = a.getBoolean(R.styleable.Rectangle_showLetter, false);
+            rectangleSize = a.getDimension(R.styleable.Rectangle_rectangleSize,250);
         
         } finally {
             // release the TypedArray so that it can be reused.
             a.recycle();
         }
 
-        init();
+        init(context);
     }
-	private void init() {
+	private void init(Context context) {
+		imageBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.dado);
         rectanglePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         rectanglePaint.setColor(Color.BLACK);
-        rectanglePaint.setStyle(Paint.Style.FILL);
+        rectanglePaint.setStyle(Paint.Style.STROKE);
 	}
+	
+	@Override
 	protected void onDraw(Canvas canvas) {
 		   super.onDraw(canvas);
-		   canvas.drawRect(new Rect(0, 100, 200, 0), rectanglePaint);
 		   
+//		   canvas.drawRect(new Rect(40, (int)rectangleSize, (int)rectangleSize, 40), rectanglePaint);
+		   canvas.drawRect(new Rect(getLeft(), getTop(), getRight(), getBottom()),rectanglePaint);
+		   canvas.drawBitmap(imageBitmap, 0.0f, 0.0f, null);
+	}
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
 
-		
-
-//		   // Draw the label text
-//		   canvas.drawText(mData.get(mCurrentItem).mLabel, mTextX, mTextY, mTextPaint);
-//
-//		   // Draw the pie slices
-//		   for (int i = 0; i < mData.size(); ++i) {
-//		       Item it = mData.get(i);
-//		       mPiePaint.setShader(it.mShader);
-//		       canvas.drawArc(mBounds,
-//		               360 - it.mEndAngle,
-//		               it.mEndAngle - it.mStartAngle,
-//		               true, mPiePaint);
-//		   }
-//
-//		   // Draw the pointer
-//		   canvas.drawLine(mTextX, mPointerY, mPointerX, mPointerY, mTextPaint);
-//		   canvas.drawCircle(mPointerX, mPointerY, mPointerSize, mTextPaint);
-		}
+    }
+    
+    public boolean isShowImage(){
+    	return showImage;
+    }
+    public boolean isShowLetter(){
+    	return showLetter;
+    }
+    public boolean isShowWord(){
+    	return showWord;
+    }
+	
 	
 
 

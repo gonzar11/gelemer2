@@ -41,6 +41,7 @@ public class PieChart extends ViewGroup {
     private List<Item> mData = new ArrayList<Item>();
 
     private float mTotal = 0.0f;
+    
 
     private RectF mPieBounds = new RectF();
 

@@ -35,6 +35,8 @@
         <attr name="showWord" format="boolean"/>
         <attr name="showLetter" format="boolean"/>
         <attr name="borderColor" format="color"/>
+        <attr name="rectangleSize" format="dimension"></attr>}
+        
         
      </declare-styleable>
 </resources>
