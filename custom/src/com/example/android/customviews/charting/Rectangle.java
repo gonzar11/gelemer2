@@ -17,16 +17,21 @@ public class Rectangle extends View{
 	
 	private boolean showImage, showLetter, showWord;
 	 private Paint imagePaint;
-	 private Paint textLetter;
+	 private Paint textPaint;
 	 private Paint textWord;
 	 private Paint rectanglePaint;
 	 private Paint mShadowPaint;
 	 private int textColor;
 	 private float rectangleSize;
+	 private int textSize;
+	 private int widthSize,heightSize;
 	 
 	 private Bitmap imageBitmap; 
+	 
+	 private String word,letter;
 	
 	
+
 
 	public Rectangle(Context context) {
 		super(context);
@@ -52,15 +57,12 @@ public class Rectangle extends View{
         );
 
         try {
-            // Retrieve the values from the TypedArray and store into
-            // fields of this class.
-            //
-            // The R.styleable.PieChart_* constants represent the index for
-            // each custom attribute in the R.styleable.PieChart array.
+          
             showImage = a.getBoolean(R.styleable.Rectangle_showImage, false);
             showWord = a.getBoolean(R.styleable.Rectangle_showWord, false);
             showLetter = a.getBoolean(R.styleable.Rectangle_showLetter, false);
-            rectangleSize = a.getDimension(R.styleable.Rectangle_rectangleSize,250);
+       
+            textSize = a.getInteger(R.styleable.Rectangle_textSize, 200);
         
         } finally {
             // release the TypedArray so that it can be reused.
@@ -70,21 +72,59 @@ public class Rectangle extends View{
         init(context);
     }
 	private void init(Context context) {
+		
+		widthSize = 200;
+		heightSize = 200;
+		
 		imageBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.dado);
         rectanglePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         rectanglePaint.setColor(Color.BLACK);
         rectanglePaint.setStyle(Paint.Style.STROKE);
+        
+        textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        textPaint.setColor(Color.BLACK);
+        textPaint.setTextSize(23);
+  
 	}
 	
 	@Override
 	protected void onDraw(Canvas canvas) {
 		   super.onDraw(canvas);
+//		   Rect rectangle = new Rect(40, 40, getRight(), getBottom());
+		   Rect rectangle = new Rect(0, 0, getMeasuredHeight(), getMeasuredWidth());
 		   
-//		   canvas.drawRect(new Rect(40, (int)rectangleSize, (int)rectangleSize, 40), rectanglePaint);
-		   canvas.drawRect(new Rect(getLeft(), getTop(), getRight(), getBottom()),rectanglePaint);
-		   canvas.drawBitmap(imageBitmap, 0.0f, 0.0f, null);
+		   
+		   canvas.drawRect(rectangle, rectanglePaint);
+		   canvas.drawLine(0, 40, getMeasuredWidth(), 40, rectanglePaint);
+
+//		   canvas.drawRect(new Rect(getLeft(), getTop(), getRight(), getBottom()),rectanglePaint);
+//		   canvas.drawBitmap(imageBitmap, null, rectangle, null);
+//		   canvas.drawBitmap(imageBitmap, 0.0f, 0.0f, null);
+		   if (showLetter){
+			   canvas.drawText("A", 100, 90, textPaint);
+		   }
+		   
+		   if (showWord){
+			   canvas.drawText(word, 100, 140, textPaint);
+		   }
+		   if (showImage){
+			   canvas.drawBitmap(imageBitmap, null, rectangle, null);
+			   
+			   
+		   }
+		   
 	}
-    @Override
+	@Override 
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec){
+//	   int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
+//	   int parentHeight = MeasureSpec.getSize(heightMeasureSpec);
+//	   this.setMeasuredDimension(parentWidth/2, parentHeight);
+//	   this.setLayoutParams(new *ParentLayoutType*.LayoutParams(parentWidth/2,parentHeight));
+	   super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+	   setMeasuredDimension(widthSize, heightSize);
+	}
+ 
+	@Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
@@ -99,6 +139,22 @@ public class Rectangle extends View{
     public boolean isShowWord(){
     	return showWord;
     }
+    
+    public String getWord() {
+		return word;
+	}
+
+	public void setWord(String word) {
+		this.word = word;
+	}
+
+	public String getLetter() {
+		return letter;
+	}
+
+	public void setLetter(String letter) {
+		this.letter = letter;
+	}
 	
 	
 
