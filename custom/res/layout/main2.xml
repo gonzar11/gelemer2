@@ -11,16 +11,17 @@
 
     <com.example.android.customviews.charting.Rectangle
         android:id="@+id/Rectangle1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_margin="50dp"
          
         custom:showWord="false"
         custom:showLetter="true"
       	custom:showImage="true" />
     <com.example.android.customviews.charting.Rectangle
         android:id="@+id/Rectangle2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
         android:layout_margin="10dp"
         custom:showImage="true"
         
@@ -28,34 +29,12 @@
         custom:showLetter="true" />
     <com.example.android.customviews.charting.Rectangle
         android:id="@+id/Rectangle3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+       android:layout_width="250dp"
+        android:layout_height="250dp"
         custom:showWord="true" />
   
     </LinearLayout>
-    <LinearLayout 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-    <com.example.android.customviews.charting.Rectangle
-        android:id="@+id/Rectangle4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        
-         />
-     
-    <com.example.android.customviews.charting.Rectangle
-        android:id="@+id/Rectangle5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-         />
-    <com.example.android.customviews.charting.Rectangle
-        android:id="@+id/Rectangle6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-         />
-    </LinearLayout>
+    
     
      
     

@@ -37,6 +37,7 @@
         <attr name="borderColor" format="color"/>
         <attr name="rectangleSize" format="dimension"/>
         <attr name="textSize" format="dimension"/>
+        <attr name="dropeable" format="boolean"></attr>
         
         
         
