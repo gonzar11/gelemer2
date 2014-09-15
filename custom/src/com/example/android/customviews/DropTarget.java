@@ -1,46 +1,92 @@
 package com.example.android.customviews;
 
-import android.view.View;
+
+
+import android.graphics.Rect;
+
 
 
 
 public interface DropTarget {
 
-/**
- * Return true if the DropTarget allows objects to be dropped on it.
- * 
- * @param source DragSource where the drag started
- * @return boolean True if the drop will be accepted, false otherwise.
- */
+    /**
+     * Handle an object being dropped on the DropTarget
+     * 
+     * @param source DragSource where the drag started
+     * @param x X coordinate of the drop location
+     * @param y Y coordinate of the drop location
+     * @param xOffset Horizontal offset with the object being dragged where the original
+     *          touch happened
+     * @param yOffset Vertical offset with the object being dragged where the original
+     *          touch happened
+     * @param dragView The DragView that's being dragged around on screen.
+     * @param dragInfo Data associated with the object being dragged
+     * 
+     */
+    void onDrop(DragSource source, int x, int y, int xOffset, int yOffset,
+            DragShadow dragView, Object dragInfo);
 
-public boolean allowDrop (DragSource source);
+    /**
+     * React to something started to be dragged.
+     */    
+    void onDragEnter(DragSource source, int x, int y, int xOffset, int yOffset,
+            DragShadow dragView, Object dragInfo);
 
-/**
- * Return the view that is the actual target of the information being dragged.
- * 
- * @return View
- */
+    /**
+     * React to something being dragged over the drop target.
+     */    
+    void onDragOver(DragSource source, int x, int y, int xOffset, int yOffset,
+            DragShadow dragView, Object dragInfo);
 
-public View dragDropView ();
+    /**
+     * React to a drag 
+     */    
+    void onDragExit(DragSource source, int x, int y, int xOffset, int yOffset,
+            DragShadow dragView, Object dragInfo);
 
-/**
- * Handle an object being dropped on the DropTarget
- * 
- * @param source DragSource where the drag started
- */
+    /**
+     * Check if a drop action can occur at, or near, the requested location.
+     * This may be called repeatedly during a drag, so any calls should return
+     * quickly.
+     * 
+     * @param source DragSource where the drag started
+     * @param x X coordinate of the drop location
+     * @param y Y coordinate of the drop location
+     * @param xOffset Horizontal offset with the object being dragged where the
+     *            original touch happened
+     * @param yOffset Vertical offset with the object being dragged where the
+     *            original touch happened
+     * @param dragView The DragView that's being dragged around on screen.
+     * @param dragInfo Data associated with the object being dragged
+     * @return True if the drop will be accepted, false otherwise.
+     */
+    boolean acceptDrop(DragSource source, int x, int y, int xOffset, int yOffset,
+            DragShadow dragView, Object dragInfo);
 
-public void onDrop (DragSource source);
+    /**
+     * Estimate the surface area where this object would land if dropped at the
+     * given location.
+     * 
+     * @param source DragSource where the drag started
+     * @param x X coordinate of the drop location
+     * @param y Y coordinate of the drop location
+     * @param xOffset Horizontal offset with the object being dragged where the
+     *            original touch happened
+     * @param yOffset Vertical offset with the object being dragged where the
+     *            original touch happened
+     * @param dragView The DragView that's being dragged around on screen.
+     * @param dragInfo Data associated with the object being dragged
+     * @param recycle {@link Rect} object to be possibly recycled.
+     * @return Estimated area that would be occupied if object was dropped at
+     *         the given location. Should return null if no estimate is found,
+     *         or if this target doesn't provide estimations.
+     */
+    Rect estimateDropLocation(DragSource source, int x, int y, int xOffset, int yOffset,
+           DragShadow dragView, Object dragInfo, Rect recycle);
 
-/**
- * React to a dragged object entering into the view of the DropTarget.
- */    
-
-public void onDragEnter (DragSource source);
-
-/**
- * React to a dragged object leaving the view of the DropTarget.
- */    
-
-public void onDragExit (DragSource source);
-
+    // These methods are implemented in Views
+    void getHitRect(Rect outRect);
+    void getLocationOnScreen(int[] loc);
+    int getLeft();
+    int getTop();
 }

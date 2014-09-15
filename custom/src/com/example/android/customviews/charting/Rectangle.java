@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.example.android.customviews.Card;
+import com.example.android.customviews.DragShadow;
 import com.example.android.customviews.DragSource;
 import com.example.android.customviews.DropTarget;
 
@@ -30,7 +31,7 @@ import com.example.android.customviews.adapters.CardViewAdapter;
 public class Rectangle extends View implements DragSource, DropTarget {
 	
 	
-	private boolean mShowImage, mShowLetter, mShowWord, mDropeable;
+	private boolean mShowImage, mShowLetter, mShowWord, mDropeable, mAllowDrag;
 	private Paint imagePaint;
 	private Paint mTextPaint;
 	private Paint mTextWord;
@@ -164,35 +165,8 @@ public class Rectangle extends View implements DragSource, DropTarget {
 		this.letter = letter;
 	}
 
-	@Override
-	public boolean allowDrop(DragSource source) {
-		if (source == this) return false;
-		
-		return true;
-	}
+	
 
-
-	@Override
-	public void onDrop(DragSource source) {
-
-		Rectangle rect = (Rectangle)source;
-		rect.setVisibility(GONE);
-		Card carDataItem = mAdapter.getmData().get(rect.myCellnumber);
-		mAdapter.getmData().remove(carDataItem);
-		mAdapter.getmData().add(this.myCellnumber, carDataItem);
-		mAdapter.notifyDataSetChanged();
-	}
-
-	@Override
-	public void onDragEnter(DragSource source) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onDragExit(DragSource source) {
-		
-	}
 
 	@Override
 	public boolean allowDrag() {
@@ -229,6 +203,57 @@ public class Rectangle extends View implements DragSource, DropTarget {
 			setVisibility(View.VISIBLE);
 		}
 		
+	}
+
+	@Override
+	public void onDrop(DragSource source, int x, int y, int xOffset,
+			int yOffset, DragShadow dragView, Object dragInfo) {
+			
+			Rectangle rect = (Rectangle)source;
+			rect.setVisibility(GONE);
+			Card carDataItem = mAdapter.getmData().get(rect.myCellnumber);
+			mAdapter.getmData().remove(carDataItem);
+			mAdapter.getmData().add(this.myCellnumber, carDataItem);
+			mAdapter.notifyDataSetChanged();
+	}
+	
+	
+
+	@Override
+	public void onDragEnter(DragSource source, int x, int y, int xOffset,
+			int yOffset, DragShadow dragView, Object dragInfo) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+
+	@Override
+	public void onDragOver(DragSource source, int x, int y, int xOffset,
+			int yOffset, DragShadow dragView, Object dragInfo) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onDragExit(DragSource source, int x, int y, int xOffset,
+			int yOffset, DragShadow dragView, Object dragInfo) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean acceptDrop(DragSource source, int x, int y, int xOffset,
+			int yOffset, DragShadow dragView, Object dragInfo) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public Rect estimateDropLocation(DragSource source, int x, int y,
+			int xOffset, int yOffset, DragShadow dragView, Object dragInfo,
+			Rect recycle) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

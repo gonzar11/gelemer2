@@ -67,16 +67,11 @@ public class CardViewAdapter extends BaseAdapter {
 		Rectangle card = (Rectangle) view.findViewById(R.id.Rectangle1);
 		card.myCellnumber = position;
 		card.mAdapter = this;
-		card.setOnDragListener (mDragListener);
-//		card.setBackgroundResource (R.color.bluegrass);
-
-		    // Set up to relay events to the activity.
-		    // The activity decides which events trigger drag operations.
-		    // Activities like the Android Launcher require a long click to get a drag operation started.
-		  card.setLetter(dataCard.getmLetter());
-		  card.setOnTouchListener ((View.OnTouchListener) mContext);
-		  card.setOnClickListener ((View.OnClickListener) mContext);
-		  card.setOnLongClickListener ((View.OnLongClickListener) mContext);
+		
+		card.setLetter(dataCard.getmLetter());
+		card.setOnTouchListener ((View.OnTouchListener) mContext);
+		card.setOnClickListener ((View.OnClickListener) mContext);
+		card.setOnLongClickListener ((View.OnLongClickListener) mContext);
 		  
 		  
 		  

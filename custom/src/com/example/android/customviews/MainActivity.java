@@ -18,12 +18,10 @@ package com.example.android.customviews;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import android.R.color;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -33,17 +31,16 @@ import android.view.WindowManager;
 import android.view.animation.TranslateAnimation;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-
 import com.example.android.customviews.adapters.CardViewAdapter;
 
 
 
 public class MainActivity extends Activity 
 	implements View.OnLongClickListener, View.OnClickListener,
-				DragDropPresenter,View.OnTouchListener
+				View.OnTouchListener
 {
 	private DragController mDragController;
+	private DragLayer mDragLayer;
 	private GridView mGridView;
 	private List<Card> data;
 	
@@ -62,7 +59,7 @@ public class MainActivity extends Activity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
                                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         
-        setContentView(R.layout.main);
+        setContentView(R.layout.main3);
         mDragController = new DragController (this);
         
         data = new ArrayList<Card>();
@@ -78,7 +75,14 @@ public class MainActivity extends Activity
         data.add(card5);
         
         mGridView = (GridView) findViewById(R.id.gridView1);
-        mGridView.setAdapter(new CardViewAdapter(data, this, mDragController));
+        mGridView.setAdapter(new CardViewAdapter(data, this));
+        
+        mDragLayer = (DragLayer) findViewById(R.id.drag_layer);
+        mDragLayer.setDragController (mDragController);
+        mDragLayer.setGridView (mGridView);
+
+        mDragController.setDragListener (mDragLayer);
+        // mDragController.addDropTarget (mDragLayer)
         
         //Esto es una prueba
 //        LinearLayout ml = (LinearLayout) findViewById(R.id.gadorcha);
@@ -90,6 +94,7 @@ public class MainActivity extends Activity
 
 
     }
+   
 
 	void gadorcha(Bitmap imgBitmap, int xPos, int yPos) {
 		
@@ -139,22 +144,22 @@ public class MainActivity extends Activity
 	    return handledHere;
 	}
 
-	@Override
-	public boolean isDragDropEnabled() {
-		return true;
-	}
-
-	@Override
-	public void onDragStarted(DragSource source) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onDropCompleted(DropTarget target, boolean success) {
-		// TODO Auto-generated method stub
-		
-	}
+//	@Override
+//	public boolean isDragDropEnabled() {
+//		return true;
+//	}
+//
+//	@Override
+//	public void onDragStarted(DragSource source) {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//	@Override
+//	public void onDropCompleted(DropTarget target, boolean success) {
+//		// TODO Auto-generated method stub
+//		
+//	}
 
 	@Override
 	public void onClick(View v) {
@@ -167,15 +172,17 @@ public class MainActivity extends Activity
 		// TODO Auto-generated method stub
 		return false;
 	}
-	public boolean startDrag (View v) {
-	    // We are starting a drag-drop operation. 
-	    // Set up the view and let our controller handle it.
-		
-		
-	    v.setOnDragListener(mDragController);
-	    mDragController.startDrag (v);
+	
+	public boolean startDrag (View v)
+	{
+	    DragSource dragSource = (DragSource) v;
+
+	    // We are starting a drag. Let the DragController handle it.
+	    mDragController.startDrag (v, dragSource, dragSource, DragController.DRAG_ACTION_MOVE);
+
 	    return true;
 	}
+
 	
 	public void setOriginalPositionToImageWithAnimation(View v){
 		  TranslateAnimation localTranslateAnimation = new TranslateAnimation(1000, 0, 1000, 0);
