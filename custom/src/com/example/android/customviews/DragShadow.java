@@ -23,7 +23,7 @@ public class DragShadow extends View {
 	    private int mRegistrationY;
 
 	    private float mScale;
-	    private float mAnimationScale = 0.9f;
+	    private float mAnimationScale = 1.0f;
 
 	    private WindowManager.LayoutParams mLayoutParams;
 	    private WindowManager mWindowManager;
@@ -64,14 +64,8 @@ public class DragShadow extends View {
 
 	    @Override
 	    protected void onDraw(Canvas canvas) {
-	        if (true) {
-	            // Puts a little border around the view so you can see that you selected something.
-	            Paint p = new Paint();
-	            p.setStyle (Paint.Style.FILL);
-	            p.setColor (0x8800dd11);
-	            p.setAlpha (80);
-	            canvas.drawRect(0, 0, getWidth(), getHeight(), p);
-	        }
+	        
+	   
 	        float scale = mAnimationScale;
 	        if (scale < 0.999f) { // allow for some float error
 	            float height = mBitmap.getHeight();
@@ -82,7 +76,7 @@ public class DragShadow extends View {
 	            canvas.scale(scale, scale);
 	        }
 	        Paint p2 = new Paint();
-	        p2.setAlpha (100);
+	        p2.setAlpha (255);
 	        canvas.drawBitmap(mBitmap, 0.0f, 0.0f, p2);
 	    }
 

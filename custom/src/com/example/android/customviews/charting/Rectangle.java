@@ -191,7 +191,7 @@ public class Rectangle extends View implements DragSource, DropTarget {
 	 */
 	@Override
 	public void onDragStarted() {
-		// Hacerle algún efecto a la tarjeta para que resale que fue seleccionada
+		// Hacerle algï¿½n efecto a la tarjeta para que resale que fue seleccionada
 //		setVisibility(View.GONE);
 //		invalidate();
 		
@@ -212,8 +212,8 @@ public class Rectangle extends View implements DragSource, DropTarget {
 			Rectangle rect = (Rectangle)source;
 			rect.setVisibility(GONE);
 			Card carDataItem = mAdapter.getmData().get(rect.myCellnumber);
-			mAdapter.getmData().remove(carDataItem);
-			mAdapter.getmData().add(this.myCellnumber, carDataItem);
+//			mAdapter.getmData().remove(carDataItem);
+			mAdapter.getmData().set(this.myCellnumber++, carDataItem);
 			mAdapter.notifyDataSetChanged();
 	}
 	

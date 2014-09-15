@@ -18,7 +18,9 @@ package com.example.android.customviews;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import android.R.color;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
@@ -31,6 +33,7 @@ import android.view.WindowManager;
 import android.view.animation.TranslateAnimation;
 import android.widget.GridView;
 import android.widget.ImageView;
+
 import com.example.android.customviews.adapters.CardViewAdapter;
 
 
@@ -46,6 +49,7 @@ public class MainActivity extends Activity
 	
 	 private WindowManager.LayoutParams mWindowParams;
 	 private WindowManager mWindowManager;
+	 
     /**
      * Called when the activity is first created.
      */
@@ -96,15 +100,12 @@ public class MainActivity extends Activity
     }
    
 
-	void gadorcha(Bitmap imgBitmap, int xPos, int yPos) {
-		
-//		Drawable draw = getResources().getDrawable(R.drawable.dado);
+	ImageView gadorcha(Bitmap imgBitmap, int xPos, int yPos) {
+				
         ImageView img = new ImageView(this);
         img.setImageBitmap(imgBitmap);
-//        img.setImageDrawable(draw);
         img.setBackgroundColor(color.black);
-////        img.layout(100, 100, 100, 100);
-//        ml.addView(img);
+
         
         mWindowParams = new WindowManager.LayoutParams();
         mWindowParams.gravity = Gravity.LEFT | Gravity.TOP;
@@ -119,14 +120,12 @@ public class MainActivity extends Activity
         mWindowParams.format = PixelFormat.TRANSLUCENT;
         mWindowParams.windowAnimations = 0;
 
-//        ImageView v = new ImageView(mContext);
-//        int backGroundColor = mContext.getResources().getColor(R.color.bg_background);
-//        v.setBackgroundColor(backGroundColor);
-//        v.setImageBitmap(bm);
+
 
         mWindowManager = (WindowManager)getSystemService("window");
         mWindowManager.addView(img, mWindowParams);
-        setOriginalPositionToImageWithAnimation(img);
+        return img;
+
 	}
 
 	@Override
@@ -190,6 +189,34 @@ public class MainActivity extends Activity
 		  localTranslateAnimation.setFillAfter(false);
 		//  localTranslateAnimation.setAnimationListener(new MyAnimationListener(this));
 		  v.startAnimation(localTranslateAnimation);
-		}
+	}
+	
+    public void updateViewLayout(View view, Integer x, Integer y, Integer w, Integer h){
+	    if (view!=null) {
+	        WindowManager.LayoutParams lp = (WindowManager.LayoutParams) view.getLayoutParams();
+	
+	        if(x != null)lp.x=x;
+	        if(y != null)lp.y=y;
+	        if(w != null && w>0)lp.width=w;
+	        if(h != null && h>0)lp.height=h;
+	        
+	        
+	
+	        mWindowManager.updateViewLayout(view, lp);
+	     }
+	 }
+    public  void overlayAnimation(final View view2animate, int viewX, int endX) {
+    ValueAnimator translateLeft = ValueAnimator.ofInt(viewX, endX);
+    translateLeft.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        @Override
+        public void onAnimationUpdate(ValueAnimator valueAnimator) {
+            int val = (Integer) valueAnimator.getAnimatedValue();
+            updateViewLayout(view2animate, val, null, null, null);
+
+        }
+    });
+    translateLeft.setDuration(1000);
+    translateLeft.start();
+}
 }
 

@@ -1,8 +1,7 @@
 package com.example.android.customviews;
 
 import java.util.ArrayList;
-import com.example.android.customviews.charting.Rectangle;
-import android.content.ClipData;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
@@ -10,13 +9,12 @@ import android.os.IBinder;
 import android.os.Vibrator;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 
 
 /**
@@ -63,12 +61,15 @@ public class DragController {
 
     /** Original view that is being dragged.  */
     private View mOriginator;
+    private int mYDragSource;
+    private int mXDragSource;
 
     /** X offset from the upper-left corner of the cell to where we touched.  */
     private float mTouchOffsetX;
 
     /** Y offset from the upper-left corner of the cell to where we touched.  */
     private float mTouchOffsetY;
+    
 
     /** Where the drag originated */
     private DragSource mDragSource;
@@ -152,10 +153,10 @@ public class DragController {
 
         int[] loc = mCoordinatesTemp;
         v.getLocationOnScreen(loc);
-        int screenX = loc[0];
-        int screenY = loc[1];
+        mXDragSource = loc[0];
+        mYDragSource = loc[1];
 
-        startDrag(b, screenX, screenY, 0, 0, b.getWidth(), b.getHeight(),
+        startDrag(b, mXDragSource, mYDragSource, 0, 0, b.getWidth(), b.getHeight(),
                 source, dragInfo, dragAction);
 
         b.recycle();
@@ -282,8 +283,16 @@ public class DragController {
                 mListener.onDragEnd();
             }
             if (mDragView != null) {
-                mDragView.remove();
-                mDragView = null;
+            	MainActivity mA = (MainActivity) mContext;
+            	
+            	int[] coord =new int[2];
+            	coord = Util.getDragViewPosition(mDragView);
+            	ImageView iv = mA.gadorcha(getViewBitmap(mDragView), coord[0], coord[1]);
+            	mA.overlayAnimation(mDragView, coord[0], mXDragSource);
+            	
+            	
+//                mDragView.remove();
+//                mDragView = null;
             }
         }
     }
