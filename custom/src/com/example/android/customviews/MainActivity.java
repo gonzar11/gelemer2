@@ -19,13 +19,22 @@ package com.example.android.customviews;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.R.color;
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.PixelFormat;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.TranslateAnimation;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+
 import com.example.android.customviews.adapters.CardViewAdapter;
 
 
@@ -38,6 +47,8 @@ public class MainActivity extends Activity
 	private GridView mGridView;
 	private List<Card> data;
 	
+	 private WindowManager.LayoutParams mWindowParams;
+	 private WindowManager mWindowManager;
     /**
      * Called when the activity is first created.
      */
@@ -69,16 +80,49 @@ public class MainActivity extends Activity
         mGridView = (GridView) findViewById(R.id.gridView1);
         mGridView.setAdapter(new CardViewAdapter(data, this, mDragController));
         
+        //Esto es una prueba
+//        LinearLayout ml = (LinearLayout) findViewById(R.id.gadorcha);
+//        gadorcha();
+        
 
-//        
-//        rect1.setWord("Arbol");
-//        rect2.setWord("Banana");
-//        rect3.setWord("Casa");
-//        rect4.setWord("Dado");
+
         
 
 
     }
+
+	void gadorcha(Bitmap imgBitmap, int xPos, int yPos) {
+		
+//		Drawable draw = getResources().getDrawable(R.drawable.dado);
+        ImageView img = new ImageView(this);
+        img.setImageBitmap(imgBitmap);
+//        img.setImageDrawable(draw);
+        img.setBackgroundColor(color.black);
+////        img.layout(100, 100, 100, 100);
+//        ml.addView(img);
+        
+        mWindowParams = new WindowManager.LayoutParams();
+        mWindowParams.gravity = Gravity.LEFT | Gravity.TOP;
+        mWindowParams.x = xPos;
+        mWindowParams.y = yPos;
+        mWindowParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        mWindowParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        mWindowParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+            | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+            | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+            | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+        mWindowParams.format = PixelFormat.TRANSLUCENT;
+        mWindowParams.windowAnimations = 0;
+
+//        ImageView v = new ImageView(mContext);
+//        int backGroundColor = mContext.getResources().getColor(R.color.bg_background);
+//        v.setBackgroundColor(backGroundColor);
+//        v.setImageBitmap(bm);
+
+        mWindowManager = (WindowManager)getSystemService("window");
+        mWindowManager.addView(img, mWindowParams);
+        setOriginalPositionToImageWithAnimation(img);
+	}
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
@@ -126,9 +170,19 @@ public class MainActivity extends Activity
 	public boolean startDrag (View v) {
 	    // We are starting a drag-drop operation. 
 	    // Set up the view and let our controller handle it.
+		
+		
 	    v.setOnDragListener(mDragController);
 	    mDragController.startDrag (v);
 	    return true;
 	}
+	
+	public void setOriginalPositionToImageWithAnimation(View v){
+		  TranslateAnimation localTranslateAnimation = new TranslateAnimation(1000, 0, 1000, 0);
+		  localTranslateAnimation.setDuration(400);
+		  localTranslateAnimation.setFillAfter(false);
+		//  localTranslateAnimation.setAnimationListener(new MyAnimationListener(this));
+		  v.startAnimation(localTranslateAnimation);
+		}
 }
 

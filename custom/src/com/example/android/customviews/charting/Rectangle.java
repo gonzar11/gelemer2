@@ -29,6 +29,7 @@ import com.example.android.customviews.adapters.CardViewAdapter;
 
 public class Rectangle extends View implements DragSource, DropTarget {
 	
+	
 	private boolean mShowImage, mShowLetter, mShowWord, mDropeable;
 	private Paint imagePaint;
 	private Paint mTextPaint;
@@ -84,19 +85,14 @@ public class Rectangle extends View implements DragSource, DropTarget {
     }
 	private void init(Context context) {
 		
-		
-		
-		widthSize = 200;
-		heightSize = 200;
-		
 		imageBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.dado);
         mRectanglePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mRectanglePaint.setColor(Color.BLACK);
         mRectanglePaint.setStyle(Paint.Style.STROKE);
-//      rectanglePaint.setStrokeWidth(1);
+        mRectanglePaint.setStrokeWidth(2);
         
         mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mTextPaint.setColor(Color.BLUE);
+        mTextPaint.setColor(Color.BLACK);
         mTextPaint.setTextSize(40);
         mTextPaint.setTextAlign(Align.CENTER);
   
@@ -105,20 +101,20 @@ public class Rectangle extends View implements DragSource, DropTarget {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		   super.onDraw(canvas);
-		   rectangleWidth = getMeasuredWidth();
-		   rectangleHeight = getMeasuredHeight();
-		   Rect rectangle = new Rect(0, 0, rectangleHeight, rectangleWidth);
+		   rectangleWidth = getMeasuredWidth()-2;
+		   rectangleHeight = getMeasuredHeight() - 2;
+		   Rect rectangle = new Rect(2, 2, rectangleHeight, rectangleWidth);
 //		   Rect rectangle2 = new Rect(rectangleHeight*0.3, rectangleHeight*0.3, rectangleHeight*0.7, rectangleHeight*0.7);
 		   RectF rect = new RectF(rectangleHeight*0.25f, rectangleHeight*0.25f, rectangleHeight*0.75f, rectangleHeight*0.75f);
 		   float f=0.3f;
 		   
 		   
 		   canvas.drawRect(rectangle, mRectanglePaint);
-		   canvas.drawLine(0, (float) (rectangleHeight*0.2), getMeasuredWidth(), (float) (rectangleHeight*0.2), mRectanglePaint);
+		   canvas.drawLine(2, (float) (rectangleHeight*0.2), rectangleWidth, (float) (rectangleHeight*0.2), mRectanglePaint);
 		   
 
 		   if (isShowLetter()){
-			   canvas.drawText(getLetter(),rectangleWidth/2, (float) (rectangleHeight*0.2), mTextPaint);
+			   canvas.drawText(getLetter(),rectangleWidth/2, (float) (rectangleHeight*0.18), mTextPaint);
 		   }
 		   if (isShowWord()){
 			   canvas.drawText("Auto", rectangleWidth/2, (float) (rectangleHeight*0.93), mTextPaint);
@@ -131,10 +127,6 @@ public class Rectangle extends View implements DragSource, DropTarget {
 	}
 	@Override 
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec){
-//	   int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
-//	   int parentHeight = MeasureSpec.getSize(heightMeasureSpec);
-//	   this.setMeasuredDimension(parentWidth/2, parentHeight);
-//	   this.setLayoutParams(new *ParentLayoutType*.LayoutParams(parentWidth/2,parentHeight));
 	   super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 	   int w = getMeasuredWidth();
 	   int h = getMeasuredHeight();
@@ -182,29 +174,13 @@ public class Rectangle extends View implements DragSource, DropTarget {
 
 	@Override
 	public void onDrop(DragSource source) {
-//		 Log.d (DragActivity.LOG_NAME, "ImageCell.onDrop: " + mCellNumber + " source: " + source);
-	        
-		    // Mark the cell so it is no longer empty.
-//		    mEmpty = false;
-//		    int bg = mEmpty ? R.color.cell_empty : R.color.cell_filled;
-//		    setBackgroundResource (bg);
 
-		    // The view being dragged does not actually change its parent and switch over to the ImageCell.
-		    // What we do is copy the drawable from the source view.
-//		    Rectangle sourceView = (Rectangle) source.dragDropView ();
 		Rectangle rect = (Rectangle)source;
 		rect.setVisibility(GONE);
 		Card carDataItem = mAdapter.getmData().get(rect.myCellnumber);
 		mAdapter.getmData().remove(carDataItem);
 		mAdapter.getmData().add(this.myCellnumber, carDataItem);
 		mAdapter.notifyDataSetChanged();
-		
-		   
-		    
-
-		   
-		
-		
 	}
 
 	@Override
@@ -242,14 +218,16 @@ public class Rectangle extends View implements DragSource, DropTarget {
 	@Override
 	public void onDragStarted() {
 		// Hacerle algún efecto a la tarjeta para que resale que fue seleccionada
-		setVisibility(View.INVISIBLE);
-		invalidate();
+//		setVisibility(View.GONE);
+//		invalidate();
 		
 	}
 
 	@Override
 	public void onDropCompleted(DropTarget target, boolean success) {
-		// TODO Auto-generated method stub
+		if (success){
+			setVisibility(View.VISIBLE);
+		}
 		
 	}
 	

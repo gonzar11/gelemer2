@@ -3,9 +3,12 @@ package com.example.android.customviews;
 import com.example.android.customviews.charting.Rectangle;
 
 import android.content.ClipData;
+import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.View;
+import android.view.animation.TranslateAnimation;
 
 
 /**
@@ -27,7 +30,9 @@ public class DragController
     private boolean mDropSuccess;         // indicates that the drop was successful
 
     private DragSource mDragSource;       // where the drag originated
-    private DropTarget mDropTarget;       // where the object was dropped
+    private DropTarget mDropTarget;  // where the object was dropped
+    int xDragSourcePosition;
+    int yDragSourcePosition;
 
 
 	/**
@@ -50,6 +55,8 @@ public class DragController
 
 	@Override
 	public boolean onDrag (View v, DragEvent event) {
+		
+		
 	
 	    // Check to see if the presenter object has drag-drop enabled.
 	    if (mPresenter != null) {
@@ -77,7 +84,8 @@ public class DragController
 	    switch(action) {
 	
 	      case DragEvent.ACTION_DRAG_STARTED:
-	        //Log.d (DragActivity.LOG_NAME, "Drag started");
+	    	
+	    	  //Log.d (DragActivity.LOG_NAME, "Drag started");
 	
 	        // We want a call to mPresenter.onDragStarted once. So check to see if we are already dragging.
 	        if (!mDragging) {
@@ -153,6 +161,7 @@ public class DragController
 	      case DragEvent.ACTION_DRAG_ENDED:
 	//        Log.d (DragActivity.LOG_NAME, "DragController.onDrag - ended");
 	        if (mDragging) {
+	        	
 	           // At the end of the drag, do two things.
 	           // (1) Inform the drag source that the drag is over; (2) Inform the presenter.
 	//           Log.d (DragActivity.LOG_NAME, "DragController.onDrag DragSource: " + mDragSource);
@@ -176,9 +185,16 @@ public class DragController
  */    
 
 public boolean startDrag (View v) {
-
-    boolean isDragSource = false;
+	
+	boolean isDragSource = false;
     DragSource ds = null;
+    getDragViewPosition(v);
+    
+    //Esto es una prueba
+    Bitmap im = getViewBitmap(v);
+    MainActivity mActivity = (MainActivity) mPresenter;
+    mActivity.gadorcha(im, xDragSourcePosition, yDragSourcePosition);
+    
     try {
         ds = (DragSource) v;
         isDragSource = true;
@@ -194,9 +210,55 @@ public boolean startDrag (View v) {
 
     ClipData dragData = ds.clipDataForDragDrop ();
     View.DragShadowBuilder shadowView = new View.DragShadowBuilder (v);
+//    v.setVisibility(View.INVISIBLE);
     v.startDrag (dragData, shadowView, null, 0);
     return true;
 }
+
+
+private void getDragViewPosition(View v) {
+	int[] loc = new int[2];
+     v.getLocationOnScreen(loc);
+     xDragSourcePosition = loc[0];
+     yDragSourcePosition = loc[1];
+}
+//Este metodo no va a ir acá
+
+//Este metodo no va a ir acá
+private Bitmap getViewBitmap(View v) {
+    v.clearFocus();
+    v.setPressed(false);
+
+    boolean willNotCache = v.willNotCacheDrawing();
+    v.setWillNotCacheDrawing(false);
+
+    // Reset the drawing cache background color to fully transparent
+    // for the duration of this operation
+    int color = v.getDrawingCacheBackgroundColor();
+    v.setDrawingCacheBackgroundColor(0);
+
+    if (color != 0) {
+        v.destroyDrawingCache();
+    }
+    v.buildDrawingCache();
+    Bitmap cacheBitmap = v.getDrawingCache();
+    if (cacheBitmap == null) {
+//        Log.e(TAG, "failed getViewBitmap(" + v + ")", new RuntimeException());
+        return null;
+    }
+
+    Bitmap bitmap = Bitmap.createBitmap(cacheBitmap);
+
+    // Restore the view
+    v.destroyDrawingCache();
+    v.setWillNotCacheDrawing(willNotCache);
+    v.setDrawingCacheBackgroundColor(color);
+
+    return bitmap;
+}
+
+
+
 
 
 }

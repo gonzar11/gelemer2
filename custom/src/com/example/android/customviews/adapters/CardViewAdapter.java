@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,7 +68,7 @@ public class CardViewAdapter extends BaseAdapter {
 		card.myCellnumber = position;
 		card.mAdapter = this;
 		card.setOnDragListener (mDragListener);
-		card.setBackgroundResource (R.color.bluegrass);
+//		card.setBackgroundResource (R.color.bluegrass);
 
 		    // Set up to relay events to the activity.
 		    // The activity decides which events trigger drag operations.
@@ -76,6 +77,9 @@ public class CardViewAdapter extends BaseAdapter {
 		  card.setOnTouchListener ((View.OnTouchListener) mContext);
 		  card.setOnClickListener ((View.OnClickListener) mContext);
 		  card.setOnLongClickListener ((View.OnLongClickListener) mContext);
+		  
+		  
+		  
 
 		   
 		return view;
