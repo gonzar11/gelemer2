@@ -18,22 +18,14 @@ package com.example.android.customviews;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import android.R.color;
-import android.animation.ValueAnimator;
+import android.animation.AnimatorSet;
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.PixelFormat;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.TranslateAnimation;
 import android.widget.GridView;
-import android.widget.ImageView;
-
 import com.example.android.customviews.adapters.CardViewAdapter;
 
 
@@ -44,11 +36,13 @@ public class MainActivity extends Activity
 {
 	private DragController mDragController;
 	private DragLayer mDragLayer;
-	private GridView mGridView;
+	private GridView mGridViewLeft;
+	private GridView mGridViewRight;
 	private List<Card> data;
 	
 	 private WindowManager.LayoutParams mWindowParams;
 	 private WindowManager mWindowManager;
+	 private AnimatorSet mAnimatorSet;
 	 
     /**
      * Called when the activity is first created.
@@ -62,6 +56,7 @@ public class MainActivity extends Activity
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
                                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        mWindowManager = (WindowManager)getSystemService("window");
         
         setContentView(R.layout.main3);
         mDragController = new DragController (this);
@@ -78,55 +73,26 @@ public class MainActivity extends Activity
         data.add(card4);
         data.add(card5);
         
-        mGridView = (GridView) findViewById(R.id.gridView1);
-        mGridView.setAdapter(new CardViewAdapter(data, this));
+        mGridViewLeft = (GridView) findViewById(R.id.gridView1);
+        mGridViewLeft.setAdapter(new CardViewAdapter(data, this));
+        mGridViewRight = (GridView) findViewById(R.id.gridView2);
+        mGridViewRight.setAdapter(new CardViewAdapter(data, this));
         
         mDragLayer = (DragLayer) findViewById(R.id.drag_layer);
         mDragLayer.setDragController (mDragController);
-        mDragLayer.setGridView (mGridView);
+        mDragLayer.setGridView (mGridViewLeft);
 
         mDragController.setDragListener (mDragLayer);
-        // mDragController.addDropTarget (mDragLayer)
         
-        //Esto es una prueba
-//        LinearLayout ml = (LinearLayout) findViewById(R.id.gadorcha);
-//        gadorcha();
         
 
-
         
-
-
-    }
+        
+      
+        }
    
 
-	ImageView gadorcha(Bitmap imgBitmap, int xPos, int yPos) {
-				
-        ImageView img = new ImageView(this);
-        img.setImageBitmap(imgBitmap);
-        img.setBackgroundColor(color.black);
-
-        
-        mWindowParams = new WindowManager.LayoutParams();
-        mWindowParams.gravity = Gravity.LEFT | Gravity.TOP;
-        mWindowParams.x = xPos;
-        mWindowParams.y = yPos;
-        mWindowParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        mWindowParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
-        mWindowParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-            | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-            | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-            | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
-        mWindowParams.format = PixelFormat.TRANSLUCENT;
-        mWindowParams.windowAnimations = 0;
-
-
-
-        mWindowManager = (WindowManager)getSystemService("window");
-        mWindowManager.addView(img, mWindowParams);
-        return img;
-
-	}
+	
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
@@ -183,40 +149,9 @@ public class MainActivity extends Activity
 	}
 
 	
-	public void setOriginalPositionToImageWithAnimation(View v){
-		  TranslateAnimation localTranslateAnimation = new TranslateAnimation(1000, 0, 1000, 0);
-		  localTranslateAnimation.setDuration(400);
-		  localTranslateAnimation.setFillAfter(false);
-		//  localTranslateAnimation.setAnimationListener(new MyAnimationListener(this));
-		  v.startAnimation(localTranslateAnimation);
-	}
 	
-    public void updateViewLayout(View view, Integer x, Integer y, Integer w, Integer h){
-	    if (view!=null) {
-	        WindowManager.LayoutParams lp = (WindowManager.LayoutParams) view.getLayoutParams();
 	
-	        if(x != null)lp.x=x;
-	        if(y != null)lp.y=y;
-	        if(w != null && w>0)lp.width=w;
-	        if(h != null && h>0)lp.height=h;
-	        
-	        
-	
-	        mWindowManager.updateViewLayout(view, lp);
-	     }
-	 }
-    public  void overlayAnimation(final View view2animate, int viewX, int endX) {
-    ValueAnimator translateLeft = ValueAnimator.ofInt(viewX, endX);
-    translateLeft.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-        @Override
-        public void onAnimationUpdate(ValueAnimator valueAnimator) {
-            int val = (Integer) valueAnimator.getAnimatedValue();
-            updateViewLayout(view2animate, val, null, null, null);
-
-        }
-    });
-    translateLeft.setDuration(1000);
-    translateLeft.start();
-}
+   
+   
 }
 

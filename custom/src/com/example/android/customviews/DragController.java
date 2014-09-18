@@ -14,7 +14,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageView;
 
 
 /**
@@ -93,6 +92,8 @@ public class DragController {
     private DropTarget mLastDropTarget;
 
     private InputMethodManager mInputMethodManager;
+    
+    private DragShadowAnimator mDragShadowAnimator;
 
     /**
      * Interface to receive notifications when a drag starts or stops
@@ -123,6 +124,7 @@ public class DragController {
     public DragController(Context context) {
         mContext = context;
         mVibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        mDragShadowAnimator = new DragShadowAnimator(mContext);
 
     }
 
@@ -270,30 +272,30 @@ public class DragController {
      * Stop dragging without dropping.
      */
     public void cancelDrag() {
-        endDrag();
+        endDrag(false);
     }
 
-    private void endDrag() {
+    private void endDrag(boolean dropSuccess) {
         if (mDragging) {
-            mDragging = false;
-            if (mOriginator != null) {
-                mOriginator.setVisibility(View.VISIBLE);
-            }
-            if (mListener != null) {
-                mListener.onDragEnd();
-            }
-            if (mDragView != null) {
-            	MainActivity mA = (MainActivity) mContext;
-            	
+        	mDragging = false;
+        	
+        	if (dropSuccess){
+        		mDragView.remove();
+        	} else {
+        		
             	int[] coord =new int[2];
             	coord = Util.getDragViewPosition(mDragView);
-            	ImageView iv = mA.gadorcha(getViewBitmap(mDragView), coord[0], coord[1]);
-            	mA.overlayAnimation(mDragView, coord[0], mXDragSource);
+            	mDragShadowAnimator.translateXY(mDragView, coord[0],mXDragSource, coord[1], mYDragSource);
+//            	
+        		
+        	}
+        		
+        		
+        		
+            
+            
             	
-            	
-//                mDragView.remove();
-//                mDragView = null;
-            }
+           
         }
     }
 
@@ -324,9 +326,10 @@ public class DragController {
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
                 if (mDragging) {
-                    drop(screenX, screenY);
+                    boolean dropSuccess = drop(screenX, screenY);
+                    endDrag(dropSuccess);
                 }
-                endDrag();
+                
                 break;
         }
 
@@ -392,10 +395,10 @@ public class DragController {
            
             break;
         case MotionEvent.ACTION_UP:
-            if (mDragging) {
-                drop(screenX, screenY);
+        	if (mDragging) {
+                boolean dropSuccess = drop(screenX, screenY);
+                endDrag(dropSuccess);
             }
-            endDrag();
 
             break;
         case MotionEvent.ACTION_CANCEL:

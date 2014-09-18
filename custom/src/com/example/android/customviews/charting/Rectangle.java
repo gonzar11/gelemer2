@@ -114,10 +114,10 @@ public class Rectangle extends View implements DragSource, DropTarget {
 		   canvas.drawLine(2, (float) (rectangleHeight*0.2), rectangleWidth, (float) (rectangleHeight*0.2), mRectanglePaint);
 		   
 
-		   if (isShowLetter()){
+		   if (isShowLetter() && letter != null){
 			   canvas.drawText(getLetter(),rectangleWidth/2, (float) (rectangleHeight*0.18), mTextPaint);
 		   }
-		   if (isShowWord()){
+		   if (isShowWord() && word != null){
 			   canvas.drawText("Auto", rectangleWidth/2, (float) (rectangleHeight*0.93), mTextPaint);
 		   }
 		   if (isShowImage()){

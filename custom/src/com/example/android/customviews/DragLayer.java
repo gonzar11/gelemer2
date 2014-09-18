@@ -26,6 +26,9 @@ public class DragLayer extends FrameLayout
 {
     DragController mDragController;
     GridView mGridView;
+    GridView mGridViewLeft, mGridViewCenter, mGridViewRight;
+    
+   
 
     /**
      * Used to create a new DragLayer from XML.
