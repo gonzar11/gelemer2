@@ -1,5 +1,7 @@
 package com.example.android.customviews;
 
+import com.example.android.customviews.charting.CardView;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
@@ -82,11 +84,17 @@ public GridView getGridView ()
  * @param newValue GridView
  */
 
-public void setGridView (GridView newValue)
-{
+public void setGridView (GridView newValue) {
    mGridView = newValue;
-} // end setGridView
-/* end Property GridView */
+}
+
+public void setGridViewLeft (GridView gridViewLeft){
+	mGridViewLeft = gridViewLeft;
+	
+}
+public void setGridViewRight (GridView gridViewRight){
+	mGridViewRight = gridViewRight;
+}
 
 /**
  */
@@ -106,17 +114,26 @@ public void onDragStart(DragSource source, Object info, int dragAction)
     // We are starting a drag. 
     // Build up a list of DropTargets from the child views of the GridView.
     // Tell the drag controller about them.
-
-    if (mGridView != null) {
-       int numVisibleChildren = mGridView.getChildCount();
-       for ( int i = 0; i < numVisibleChildren; i++ ) {
-           DropTarget view = (DropTarget) mGridView.getChildAt (i);
-           mDragController.addDropTarget (view);
-       }
-    }
+	CardView sourceCardView = (CardView) source;
+	if (sourceCardView.getParent() == mGridViewLeft && mGridViewLeft != null){
+		  findDropTargets(mGridViewRight);
+	} else if (sourceCardView.getParent() == mGridViewRight && mGridViewRight != null) {
+		findDropTargets(mGridViewLeft);
+	}
+  
 
   
     
+}
+
+private void findDropTargets(GridView gridView) {
+	if (gridView != null) {
+       int numVisibleChildren = gridView.getChildCount();
+       for ( int i = 0; i < numVisibleChildren; i++ ) {
+           DropTarget view = (DropTarget) gridView.getChildAt (i);
+           mDragController.addDropTarget (view);
+       }
+    }
 }
 
 /**

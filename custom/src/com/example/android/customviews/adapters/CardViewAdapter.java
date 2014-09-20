@@ -12,10 +12,16 @@ import android.widget.BaseAdapter;
 
 import com.example.android.customviews.Card;
 import com.example.android.customviews.R;
-import com.example.android.customviews.charting.Rectangle;
+import com.example.android.customviews.charting.CardView;
+import com.example.android.customviews.charting.EmptyRenderer;
+import com.example.android.customviews.charting.Renderer;
 
 public class CardViewAdapter extends BaseAdapter {
-	 List<Card> mData = new ArrayList<Card>();
+	 private List<Card> mData = new ArrayList<Card>();
+	 private Renderer mRenderer;
+	 private Renderer mEmptyRenderer;
+	 int j =1;
+	 
 	 
 	 
 	public List<Card> getmData() {
@@ -28,19 +34,18 @@ public class CardViewAdapter extends BaseAdapter {
 	private Context mContext;
 	private View.OnDragListener mDragListener;
 
-	public CardViewAdapter(List<Card> data, Context context) {
+	public CardViewAdapter(List<Card> data, Context context, Renderer renderer) {
 		mData = data;
 		mContext = context;
+		mRenderer = renderer;
+		mEmptyRenderer = new EmptyRenderer();
 	}
-	public CardViewAdapter(List<Card> data, Context context, View.OnDragListener dragListener) {
-		mData = data;
-		mContext = context;
-		mDragListener = dragListener;
-	}
+
 
 	@Override
 	public int getCount() {
 		return mData.size();
+//		return 9;
 	}
 
 	@Override
@@ -56,6 +61,8 @@ public class CardViewAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view;
+		
+		
 		if (convertView == null){
 			LayoutInflater inflater = (LayoutInflater) mContext
 			        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -63,15 +70,27 @@ public class CardViewAdapter extends BaseAdapter {
 		} else {
 			view = convertView;
 		}
-		Card dataCard = mData.get(position);
-		Rectangle card = (Rectangle) view.findViewById(R.id.Rectangle1);
-		card.myCellnumber = position;
-		card.mAdapter = this;
 		
-		card.setLetter(dataCard.getmLetter());
-		card.setOnTouchListener ((View.OnTouchListener) mContext);
-		card.setOnClickListener ((View.OnClickListener) mContext);
-		card.setOnLongClickListener ((View.OnLongClickListener) mContext);
+		
+		
+		CardView cardView = (CardView) view;
+//		if (position % 2 != 0){
+//			cardView.setRenderer(mEmptyRenderer);
+//			return cardView;
+//		}
+//		int pos = position - j + 1;
+		Card dataCard = mData.get(position);
+		
+		cardView.myCellnumber = position;
+		cardView.mAdapter = this;
+		cardView.setCard(dataCard);
+		cardView.setRenderer(mRenderer);
+		
+
+		cardView.setOnTouchListener ((View.OnTouchListener) mContext);
+		cardView.setOnClickListener ((View.OnClickListener) mContext);
+		cardView.setOnLongClickListener ((View.OnLongClickListener) mContext);
+		j++;
 		  
 		  
 		  

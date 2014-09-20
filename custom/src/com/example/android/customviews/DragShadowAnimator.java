@@ -15,6 +15,7 @@ public class DragShadowAnimator {
 	private WindowManager mWindowManager;
 	private AnimatorListener mAnimationListner;
 	private DragShadow mViewToAnimate;
+	private DragSource mDragSource;
 	
 	public DragShadowAnimator(Context context) {
 		mContext = context;
@@ -33,8 +34,9 @@ public class DragShadowAnimator {
 	        mWindowManager.updateViewLayout(view, lp);
 	     }
 	 }
-    public  void translateXY(final DragShadow viewToAnimate, int viewX, int endX, int viewY, int endY) {
+    public  void translateXY(final DragShadow viewToAnimate,DragSource originalDragView, int viewX, int endX, int viewY, int endY) {
     	mViewToAnimate = viewToAnimate;
+    	mDragSource = originalDragView;
     	ValueAnimator translateX = ValueAnimator.ofInt(viewX, endX);
     	ValueAnimator translateY = ValueAnimator.ofInt(viewY, endY);
     
@@ -71,7 +73,8 @@ public class DragShadowAnimator {
     private class AnimatorListener extends AnimatorListenerAdapter {
     	@Override
     	public void onAnimationEnd (Animator animation){
-    		mViewToAnimate.remove();
+    		if (mViewToAnimate != null) mViewToAnimate.remove();
+    		if (mDragSource != null) mDragSource.onDropCompleted(null, false);
     		
     	}
 	

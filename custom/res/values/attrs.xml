@@ -30,7 +30,7 @@
         <attr name="showText" format="boolean"/>
     </declare-styleable>
     
-     <declare-styleable name="Rectangle">
+     <declare-styleable name="CardView">
       	<attr name="showImage" format="boolean"/>
         <attr name="showWord" format="boolean"/>
         <attr name="showLetter" format="boolean"/>

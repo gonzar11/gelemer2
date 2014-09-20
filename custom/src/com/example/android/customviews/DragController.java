@@ -143,7 +143,7 @@ public class DragController {
         // Start dragging, but only if the source has something to drag.
         boolean doDrag = source.allowDrag ();
         if (!doDrag) return;
-
+        source.onDragStarted();
         mOriginator = v;
 
         Bitmap b = getViewBitmap(v);
@@ -163,9 +163,9 @@ public class DragController {
 
         b.recycle();
 
-        if (dragAction == DRAG_ACTION_MOVE) {
-            v.setVisibility(View.GONE);
-        }
+//        if (dragAction == DRAG_ACTION_MOVE) {
+//            v.setVisibility(View.GONE);
+//        }
     }
 
     /**
@@ -285,7 +285,7 @@ public class DragController {
         		
             	int[] coord =new int[2];
             	coord = Util.getDragViewPosition(mDragView);
-            	mDragShadowAnimator.translateXY(mDragView, coord[0],mXDragSource, coord[1], mYDragSource);
+            	mDragShadowAnimator.translateXY(mDragView,mDragSource, coord[0],mXDragSource, coord[1], mYDragSource);
 //            	
         		
         	}
@@ -403,6 +403,7 @@ public class DragController {
             break;
         case MotionEvent.ACTION_CANCEL:
             cancelDrag();
+            break;
         }
         return true;
     }

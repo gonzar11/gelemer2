@@ -27,6 +27,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.GridView;
 import com.example.android.customviews.adapters.CardViewAdapter;
+import com.example.android.customviews.charting.JustLetterRenderer;
+import com.example.android.customviews.charting.JustWordRenderer;
+import com.example.android.customviews.charting.Renderer;
 
 
 
@@ -61,26 +64,20 @@ public class MainActivity extends Activity
         setContentView(R.layout.main3);
         mDragController = new DragController (this);
         
-        data = new ArrayList<Card>();
-        Card card1 = new Card("A");
-        Card card2 = new Card("B");
-        Card card3 = new Card("C");
-        Card card4 = new Card("D");
-        Card card5 = new Card("E");
-        data.add(card1);
-        data.add(card2);
-        data.add(card3);
-        data.add(card4);
-        data.add(card5);
+        loadDataCard();
         
+        Renderer justLetterRenderer = new JustLetterRenderer();
+        Renderer justWordRenderer = new JustWordRenderer();
         mGridViewLeft = (GridView) findViewById(R.id.gridView1);
-        mGridViewLeft.setAdapter(new CardViewAdapter(data, this));
+        mGridViewLeft.setAdapter(new CardViewAdapter(data, this, justLetterRenderer));
         mGridViewRight = (GridView) findViewById(R.id.gridView2);
-        mGridViewRight.setAdapter(new CardViewAdapter(data, this));
+        mGridViewRight.setAdapter(new CardViewAdapter(data, this, justWordRenderer));
         
         mDragLayer = (DragLayer) findViewById(R.id.drag_layer);
         mDragLayer.setDragController (mDragController);
         mDragLayer.setGridView (mGridViewLeft);
+        mDragLayer.setGridViewLeft(mGridViewLeft);
+        mDragLayer.setGridViewRight(mGridViewRight);
 
         mDragController.setDragListener (mDragLayer);
         
@@ -90,6 +87,23 @@ public class MainActivity extends Activity
         
       
         }
+
+
+
+
+	private void loadDataCard() {
+		data = new ArrayList<Card>();
+        Card card1 = new Card("A","Auto","");
+        Card card2 = new Card("B","Ballena", "");
+        Card card3 = new Card("C","Casa","");
+        Card card4 = new Card("D","Dado","");
+        Card card5 = new Card("E","Elefante","");
+        data.add(card1);
+        data.add(card2);
+        data.add(card3);
+        data.add(card4);
+        data.add(card5);
+	}
    
 
 	
@@ -109,22 +123,7 @@ public class MainActivity extends Activity
 	    return handledHere;
 	}
 
-//	@Override
-//	public boolean isDragDropEnabled() {
-//		return true;
-//	}
-//
-//	@Override
-//	public void onDragStarted(DragSource source) {
-//		// TODO Auto-generated method stub
-//		
-//	}
-//
-//	@Override
-//	public void onDropCompleted(DropTarget target, boolean success) {
-//		// TODO Auto-generated method stub
-//		
-//	}
+
 
 	@Override
 	public void onClick(View v) {

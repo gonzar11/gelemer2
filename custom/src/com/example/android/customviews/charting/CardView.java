@@ -28,53 +28,50 @@ import com.example.android.customviews.adapters.CardViewAdapter;
 
 
 
-public class Rectangle extends View implements DragSource, DropTarget {
+public class CardView extends View implements DragSource, DropTarget {
 	
 	
-	private boolean mShowImage, mShowLetter, mShowWord, mDropeable, mAllowDrag;
-	private Paint imagePaint;
-	private Paint mTextPaint;
-	private Paint mTextWord;
-	private Paint mRectanglePaint;
-	private Paint mShadowPaint;
-	private int textColor;
+	private Card mCard;
+	private Renderer mRenderer;
+	private Paint mTextPaint, mRectanglePaint;
+	private int rectangleWidth, rectangleHeight;
+
+
+
 	private float rectangleSize;
 	private int textSize;
 	private int widthSize,heightSize;
 	 
 	 private Bitmap imageBitmap; 
-	 private int rectangleWidth, rectangleHeight;
-	 
-	 private String word,letter;
 	 
 	 public boolean mEmpty = true;
 	 public int myCellnumber;
 	 public CardViewAdapter mAdapter;
 	
+	 
+
+	
 	
 
 
-	public Rectangle(Context context) {
+	public CardView(Context context) {
 		super(context);
 		init(context);
 	}
 	
-	public Rectangle(Context context, AttributeSet attrs) {
+	public CardView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         
         TypedArray a = context.getTheme().obtainStyledAttributes(
                 attrs,
-                R.styleable.Rectangle,
+                R.styleable.CardView,
                 0, 0
         );
 
         try {
           
-            mShowImage = a.getBoolean(R.styleable.Rectangle_showImage, false);
-            mShowWord = a.getBoolean(R.styleable.Rectangle_showWord, false);
-            mShowLetter = a.getBoolean(R.styleable.Rectangle_showLetter, true);
-            mDropeable = a.getBoolean(R.styleable.Rectangle_dropeable, true);
+
             
 
          
@@ -84,9 +81,24 @@ public class Rectangle extends View implements DragSource, DropTarget {
 
         init(context);
     }
+	
+	public String getCardId(){
+		return mCard.getLetter();
+	}
+	
+	public void setCard(Card card){
+		mCard = card;
+	}
+	public void setRenderer(Renderer renderer){
+		mRenderer = renderer;
+	}
+	
+	
+	
 	private void init(Context context) {
 		
 		imageBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.dado);
+		
         mRectanglePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mRectanglePaint.setColor(Color.BLACK);
         mRectanglePaint.setStyle(Paint.Style.STROKE);
@@ -102,28 +114,12 @@ public class Rectangle extends View implements DragSource, DropTarget {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		   super.onDraw(canvas);
+		   
+		  
 		   rectangleWidth = getMeasuredWidth()-2;
 		   rectangleHeight = getMeasuredHeight() - 2;
-		   Rect rectangle = new Rect(2, 2, rectangleHeight, rectangleWidth);
-//		   Rect rectangle2 = new Rect(rectangleHeight*0.3, rectangleHeight*0.3, rectangleHeight*0.7, rectangleHeight*0.7);
-		   RectF rect = new RectF(rectangleHeight*0.25f, rectangleHeight*0.25f, rectangleHeight*0.75f, rectangleHeight*0.75f);
-		   float f=0.3f;
+		   mRenderer.Render(canvas, rectangleWidth, rectangleHeight, mRectanglePaint, mTextPaint, mCard);
 		   
-		   
-		   canvas.drawRect(rectangle, mRectanglePaint);
-		   canvas.drawLine(2, (float) (rectangleHeight*0.2), rectangleWidth, (float) (rectangleHeight*0.2), mRectanglePaint);
-		   
-
-		   if (isShowLetter() && letter != null){
-			   canvas.drawText(getLetter(),rectangleWidth/2, (float) (rectangleHeight*0.18), mTextPaint);
-		   }
-		   if (isShowWord() && word != null){
-			   canvas.drawText("Auto", rectangleWidth/2, (float) (rectangleHeight*0.93), mTextPaint);
-		   }
-		   if (isShowImage()){
-			   canvas.drawBitmap(imageBitmap, null, rect, null);
-		   
-		   }
 		   
 	}
 	@Override 
@@ -139,31 +135,7 @@ public class Rectangle extends View implements DragSource, DropTarget {
         super.onSizeChanged(w, h, oldw, oldh);
 	}
     
-    public boolean isShowImage(){
-    	return mShowImage;
-    }
-    public boolean isShowLetter(){
-    	return mShowLetter;
-    }
-    public boolean isShowWord(){
-    	return mShowWord;
-    }
-    
-    public String getWord() {
-		return word;
-	}
-
-	public void setWord(String word) {
-		this.word = word;
-	}
-
-	public String getLetter() {
-		return letter;
-	}
-
-	public void setLetter(String letter) {
-		this.letter = letter;
-	}
+   
 
 	
 
@@ -192,14 +164,14 @@ public class Rectangle extends View implements DragSource, DropTarget {
 	@Override
 	public void onDragStarted() {
 		// Hacerle alg�n efecto a la tarjeta para que resale que fue seleccionada
-//		setVisibility(View.GONE);
+		setVisibility(View.GONE);
 //		invalidate();
 		
 	}
 
 	@Override
 	public void onDropCompleted(DropTarget target, boolean success) {
-		if (success){
+		if (!success){
 			setVisibility(View.VISIBLE);
 		}
 		
@@ -209,7 +181,7 @@ public class Rectangle extends View implements DragSource, DropTarget {
 	public void onDrop(DragSource source, int x, int y, int xOffset,
 			int yOffset, DragShadow dragView, Object dragInfo) {
 			
-			Rectangle rect = (Rectangle)source;
+			CardView rect = (CardView)source;
 			rect.setVisibility(GONE);
 			Card carDataItem = mAdapter.getmData().get(rect.myCellnumber);
 //			mAdapter.getmData().remove(carDataItem);
